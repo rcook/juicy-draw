@@ -1,0 +1,8 @@
+#!/bin/bash
+set -euo pipefail
+
+this_dir=$(cd $(dirname $0); pwd -P)
+package_dir=$(dirname $this_dir)
+
+cd $package_dir
+stack exec ghcid -- -T:main
