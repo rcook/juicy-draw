@@ -1,5 +1,5 @@
 name:                   juicy-draw
-version:                0.2.0.0
+version:                0.3.0.0
 synopsis:               Draw and fill lines, rectangles and polygons
 description:            This package provides 2D primitives for drawing/filling simple 2D shapes directly onto a JuicyPixels mutable image
 homepage:               https://github.com/rcook/juicy-draw#readme
