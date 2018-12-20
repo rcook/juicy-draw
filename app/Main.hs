@@ -2,6 +2,7 @@ module Main (main) where
 
 import           Codec.Picture
 import           Codec.Picture.Drawing
+import           Codec.Picture.Geometry
 
 main :: IO ()
 main = do
@@ -24,15 +25,14 @@ main = do
         -- A dark green filled triangle
         fillTriangle m 50 200 250 300 70 350 (PixelRGB8 0 150 50)
 
-        -- A blue pentagon
-        drawPolygon m
+        -- A blue filled pentagon
+        fillPolygon m ((closed . clockwise)
             [ (340, 80)
             , (245, 149)
             , (281, 261)
             , (399, 261)
             , (435, 149)
-            , (340, 80)
-            ]
+            ])
             (PixelRGB8 0 0 255)
 
     writePng "example.png" img

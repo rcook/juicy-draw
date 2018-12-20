@@ -14,12 +14,14 @@ module Codec.Picture.Drawing
     ( drawLine
     , drawPolygon
     , drawRectangle
+    , fillPolygon
     , fillRectangle
     , fillTriangle
     , withDefaultMutableImage
     , withMutableImage
     ) where
 
+import           Codec.Picture.Geometry (Point2D)
 import           Codec.Picture.Types
                     ( Image
                     , MutableImage(..)
@@ -82,7 +84,7 @@ drawLine m x1 y1 x2 y2 colour =
 -- | Draw a polygon in the specified colour
 drawPolygon :: (Pixel px, PrimMonad m) =>
     MutableImage (PrimState m) px   -- ^ mutable image
-    -> [(Int, Int)]                 -- ^ sequence of vertices
+    -> [Point2D]                    -- ^ sequence of vertices
     -> px                           -- ^ colour
     -> m ()                         -- ^ action
 drawPolygon _ [] _ = pure ()
@@ -139,6 +141,18 @@ fillTriangle m@(MutableImage w h _) v1x v1y v2x v2y v3x v3y px =
                 w2 = orient2D v1x v1y v2x v2y x y
             when (w0 >= 0 && w1 >= 0 && w2 >= 0) $ writePixel m x y px
 
+-- | Fill a polygon as a series of triangles with the specified colour
+fillPolygon :: (Pixel px, PrimMonad m) =>
+    MutableImage (PrimState m) px   -- ^ mutable image
+    -> [Point2D]                    -- ^ sequence of vertices
+    -> px                           -- ^ colour
+    -> m ()                         -- ^ action
+fillPolygon m ((x1, y1) : vs) px =
+    let temp = zip vs (drop 1 vs)
+    in for_ temp $ \((x2, y2), (x3, y3)) ->
+        fillTriangle m x1 y1 x2 y2 x3 y3 px
+fillPolygon _ _ _ = pure ()
+
 orient2D :: Int -> Int -> Int -> Int -> Int -> Int -> Int
 orient2D ax ay bx by cx cy = (bx - ax) * (cy - ay) - (by - ay) * (cx - ax)
 
@@ -152,5 +166,5 @@ max3 a b c
     | a > b = max a c
     | otherwise = max b c
 
-minMax3 :: Int -> Int -> Int -> (Int, Int)
+minMax3 :: Int -> Int -> Int -> Point2D
 minMax3 a b c = (min3 a b c, max3 a b c)
