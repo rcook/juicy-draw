@@ -164,15 +164,15 @@ fillPolygon _ _ _ = pure ()
 orient2D :: Int -> Int -> Int -> Int -> Int -> Int -> Int
 orient2D ax ay bx by cx cy = (bx - ax) * (cy - ay) - (by - ay) * (cx - ax)
 
-min3 :: Int -> Int -> Int -> Int
+min3 :: Ord a => a -> a -> a -> a
 min3 a b c
     | a < b = min a c
     | otherwise = min b c
 
-max3 :: Int -> Int -> Int -> Int
+max3 :: Ord a => a -> a -> a -> a
 max3 a b c
     | a > b = max a c
     | otherwise = max b c
 
-minMax3 :: Int -> Int -> Int -> Point2D
+minMax3 :: Ord a => a -> a -> a -> (a, a)
 minMax3 a b c = (min3 a b c, max3 a b c)
