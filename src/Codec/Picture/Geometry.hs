@@ -20,7 +20,7 @@ module Codec.Picture.Geometry
 
 import           Data.Foldable (foldl')
 import           Data.List (sortBy)
-import           Numeric.Extras (fmod)
+import           Numeric.Extras (RealExtras, fmod)
 
 -- | 2D coordinate
 type Point2D = (Int, Int)
@@ -57,8 +57,8 @@ clockwise ps =
             in compare a2 a1) ps
         Nothing -> []
 
-angle :: Double -> Double -> Double -> Double -> Double
-angle x y cx cy = fmod (degrees (atan2 (x - cx) (y - cy)) + 360) 360
+angle :: RealExtras a => a -> a -> a -> a -> a
+angle x y cx cy = (degrees (atan2 (x - cx) (y - cy)) + 360) `fmod` 360
 
-degrees :: Double -> Double
+degrees :: Floating a => a -> a
 degrees rad = rad * pi / 180
