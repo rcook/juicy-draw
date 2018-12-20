@@ -29,8 +29,8 @@ type Point2D = (Int, Int)
 type FPoint2D = (Double, Double)
 
 -- | Compute the centroid of a polygon
-centroid ::
-    [Point2D]           -- ^ sequence of vertices
+centroid
+    :: [Point2D]        -- ^ sequence of vertices
     -> Maybe FPoint2D   -- ^ centroid
 centroid [] = Nothing
 centroid ps =
@@ -39,15 +39,15 @@ centroid ps =
     in Just (fromIntegral totalX / n'', fromIntegral totalY / n'')
 
 -- | Closed sequence of vertices
-closed ::
-    [Point2D]       -- ^ sequence of vertices
+closed
+    :: [Point2D]    -- ^ sequence of vertices
     -> [Point2D]    -- ^ sequence of vertices
 closed [] = []
 closed ps@(p : _ ) = ps ++ [p]
 
 -- | Sequence of vertices in clockwise order relative to its centroid
-clockwise ::
-    [Point2D]       -- ^ sequence of vertices
+clockwise
+    :: [Point2D]    -- ^ sequence of vertices
     -> [Point2D]    -- ^ sequence of vertices
 clockwise ps =
     case centroid ps of

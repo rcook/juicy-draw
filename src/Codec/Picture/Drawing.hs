@@ -36,8 +36,9 @@ import           Control.Monad.Primitive (PrimMonad, PrimState)
 import           Data.Foldable (for_)
 
 -- | Create an image given a function to apply to a default empty mutable image
-withDefaultMutableImage :: (Pixel px, PrimMonad m) =>
-    Int                                         -- ^ image width
+withDefaultMutableImage
+    :: (Pixel px, PrimMonad m)
+    => Int                                      -- ^ image width
     -> Int                                      -- ^ image height
     -> (MutableImage (PrimState m) px -> m ())  -- ^ function to apply to mutable image
     -> m (Image px)                             -- ^ immutable image result
@@ -47,8 +48,9 @@ withDefaultMutableImage w h f = do
     unsafeFreezeImage m
 
 -- | Create an image given a function to apply to an empty mutable image
-withMutableImage :: (Pixel px, PrimMonad m) =>
-    Int                                         -- ^ image width
+withMutableImage
+    :: (Pixel px, PrimMonad m)
+    => Int                                      -- ^ image width
     -> Int                                      -- ^ image height
     -> px                                       -- ^ background colour
     -> (MutableImage (PrimState m) px -> m ())  -- ^ function to apply to mutable image
@@ -59,14 +61,15 @@ withMutableImage w h px f = do
     unsafeFreezeImage m
 
 -- | Draw a line in the specified colour
-drawLine :: (Pixel px, PrimMonad m) =>
-    MutableImage (PrimState m) px   -- ^ mutable image
-    -> Int                          -- ^ x-coordinate of starting point
-    -> Int                          -- ^ y-coordinate of starting point
-    -> Int                          -- ^ x-coordinate of end point
-    -> Int                          -- ^ y-coordinate of end point
-    -> px                           -- ^ colour
-    -> m ()                         -- ^ action
+drawLine
+    :: (Pixel px, PrimMonad m)
+    => MutableImage (PrimState m) px    -- ^ mutable image
+    -> Int                              -- ^ x-coordinate of starting point
+    -> Int                              -- ^ y-coordinate of starting point
+    -> Int                              -- ^ x-coordinate of end point
+    -> Int                              -- ^ y-coordinate of end point
+    -> px                               -- ^ colour
+    -> m ()                             -- ^ action
 drawLine m x1 y1 x2 y2 colour =
     let dx = fromIntegral (x2 - x1) :: Double
         dy = fromIntegral (y2 - y1) :: Double
@@ -82,11 +85,12 @@ drawLine m x1 y1 x2 y2 colour =
                     in writePixel m x y colour
 
 -- | Draw a polygon in the specified colour
-drawPolygon :: (Pixel px, PrimMonad m) =>
-    MutableImage (PrimState m) px   -- ^ mutable image
-    -> [Point2D]                    -- ^ sequence of vertices
-    -> px                           -- ^ colour
-    -> m ()                         -- ^ action
+drawPolygon
+    :: (Pixel px, PrimMonad m)
+    => MutableImage (PrimState m) px    -- ^ mutable image
+    -> [Point2D]                        -- ^ sequence of vertices
+    -> px                               -- ^ colour
+    -> m ()                             -- ^ action
 drawPolygon _ [] _ = pure ()
 drawPolygon _ [_] _ = pure ()
 drawPolygon m ((x1, y1) : xs@((x2, y2) : _)) colour = do
@@ -94,39 +98,42 @@ drawPolygon m ((x1, y1) : xs@((x2, y2) : _)) colour = do
     drawPolygon m xs colour
 
 -- | Draw a rectangle in the specified colour
-drawRectangle :: (Pixel px, PrimMonad m) =>
-    MutableImage (PrimState m) px   -- ^ mutable image
-    -> Int                          -- ^ x-coordinate of top-left corner
-    -> Int                          -- ^ y-coordinate of top-left corner
-    -> Int                          -- ^ x-coordinate of bottom-right corner
-    -> Int                          -- ^ y-coordinate of bottom-right corner
-    -> px                           -- ^ colour
-    -> m ()                         -- ^ action
+drawRectangle
+    :: (Pixel px, PrimMonad m)
+    => MutableImage (PrimState m) px    -- ^ mutable image
+    -> Int                              -- ^ x-coordinate of top-left corner
+    -> Int                              -- ^ y-coordinate of top-left corner
+    -> Int                              -- ^ x-coordinate of bottom-right corner
+    -> Int                              -- ^ y-coordinate of bottom-right corner
+    -> px                               -- ^ colour
+    -> m ()                             -- ^ action
 drawRectangle m x1 y1 x2 y2 = drawPolygon m [(x1, y1), (x2, y1), (x2, y2), (x1, y2), (x1, y1)]
 
 -- | Fill a rectangle with the specified colour
-fillRectangle :: (Pixel px, PrimMonad m) =>
-    MutableImage (PrimState m) px   -- ^ mutable image
-    -> Int                          -- ^ x-coordinate of top-left corner
-    -> Int                          -- ^ y-coordinate of top-left corner
-    -> Int                          -- ^ x-coordinate of bottom-right corner
-    -> Int                          -- ^ y-coordinate of bottom-right corner
-    -> px                           -- ^ colour
-    -> m ()                         -- ^ action
+fillRectangle
+    :: (Pixel px, PrimMonad m)
+    => MutableImage (PrimState m) px    -- ^ mutable image
+    -> Int                              -- ^ x-coordinate of top-left corner
+    -> Int                              -- ^ y-coordinate of top-left corner
+    -> Int                              -- ^ x-coordinate of bottom-right corner
+    -> Int                              -- ^ y-coordinate of bottom-right corner
+    -> px                               -- ^ colour
+    -> m ()                             -- ^ action
 fillRectangle m x0 y0 x1 y1 px =
     for_ [(x, y) | x <- [x0..x1], y <- [y0..y1]] $ \(x, y) -> writePixel m x y px
 
 -- | Fill a triangle with the specified colour
-fillTriangle :: (Pixel px, PrimMonad m) =>
-    MutableImage (PrimState m) px   -- ^ mutable image
-    -> Int                          -- ^ x-coordinate of first vertex
-    -> Int                          -- ^ y-coordinate of first vertex
-    -> Int                          -- ^ x-coordinate of second vertex
-    -> Int                          -- ^ y-coordinate of second vertex
-    -> Int                          -- ^ x-coordinate of third vertex
-    -> Int                          -- ^ y-coordinate of third vertex
-    -> px                           -- ^ colour
-    -> m ()                         -- ^ action
+fillTriangle
+    :: (Pixel px, PrimMonad m)
+    => MutableImage (PrimState m) px    -- ^ mutable image
+    -> Int                              -- ^ x-coordinate of first vertex
+    -> Int                              -- ^ y-coordinate of first vertex
+    -> Int                              -- ^ x-coordinate of second vertex
+    -> Int                              -- ^ y-coordinate of second vertex
+    -> Int                              -- ^ x-coordinate of third vertex
+    -> Int                              -- ^ y-coordinate of third vertex
+    -> px                               -- ^ colour
+    -> m ()                             -- ^ action
 fillTriangle m@(MutableImage w h _) v1x v1y v2x v2y v3x v3y px =
     let (minX, maxX) = minMax3 v1x v2x v3x
         (minY, maxY) = minMax3 v1y v2y v3y
@@ -142,11 +149,12 @@ fillTriangle m@(MutableImage w h _) v1x v1y v2x v2y v3x v3y px =
             when (w0 >= 0 && w1 >= 0 && w2 >= 0) $ writePixel m x y px
 
 -- | Fill a polygon as a series of triangles with the specified colour
-fillPolygon :: (Pixel px, PrimMonad m) =>
-    MutableImage (PrimState m) px   -- ^ mutable image
-    -> [Point2D]                    -- ^ sequence of vertices
-    -> px                           -- ^ colour
-    -> m ()                         -- ^ action
+fillPolygon
+    :: (Pixel px, PrimMonad m)
+    => MutableImage (PrimState m) px    -- ^ mutable image
+    -> [Point2D]                        -- ^ sequence of vertices
+    -> px                               -- ^ colour
+    -> m ()                             -- ^ action
 fillPolygon m ((x1, y1) : vs) px =
     let temp = zip vs (drop 1 vs)
     in for_ temp $ \((x2, y2), (x3, y3)) ->
