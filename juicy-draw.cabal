@@ -38,3 +38,4 @@ executable juicy-draw-demo
       JuicyPixels
     , base >= 4.7 && < 5
     , juicy-draw
+    , primitive
