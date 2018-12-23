@@ -68,7 +68,7 @@ upload-haddocks
 
 [MIT License][licence]
 
-Copyright &copy; 2017, Richard Cook.
+Copyright &copy; 2018, Richard Cook.
 
 [change-log]: CHANGELOG.md
 [example-code]: app/Main.hs
