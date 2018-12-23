@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -w #-}
 module Main (main) where
 
 import           Codec.Picture
@@ -98,6 +99,6 @@ main = do
         h = 50
 
     img <- withMutableImage w h (PixelRGB8 0 0 0) $ \m -> do
-        newDrawLine m 0 0 50 25
+        newDrawLine m 1 1 49 24
 
     writePng "/home/rcook/Desktop/test.png" img
